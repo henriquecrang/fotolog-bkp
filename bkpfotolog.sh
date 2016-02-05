@@ -10,8 +10,8 @@ cd $user
 # baixar pagina
 wget www.fotolog.com/$user
 
-#pegar o nome da primeira página (pode dar pau em users com numero no nome. melhorar a regex)
-page=`grep -Po '(?<=content=")[^"]*\/"' $user | grep -Po '([0-9]+)'`
+#pegar o nome da primeira página
+page=`grep -Po 'content="\K[^"]*([0-9]+)\/"' $user | grep -Po '[0-9]+(?=\/")'`
 
 #criar index redirecionando para a primeira página
 echo '<META http-equiv="refresh" content="1;URL=' $page '"> ' > index.html
