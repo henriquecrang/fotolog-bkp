@@ -8,15 +8,22 @@ user=$2
 wget $url -O pagina
 
 #encontrar imagem principal e baixar
-wget `grep -Po '(?<=src=")[^"]*(_f.jpg)' pagina`
+wget `grep -Po '(?<=content=")[^"]*(_f.jpg)' pagina | uniq`
 
-#encontrar endereço da proxima pagina (fazer verificador para ultima pagina)
+grep -Po '(?<=content=")[^"]*(_f.jpg)' pagina | uniq >> listaimagens
+
+
+
+#encontrar endereço da proxima pagina
 url=`grep -Po '<a class="arrow_change_photo arrow_change_photo_right" href="\K[^"]*(?=\/#profile_start)' pagina`
 
 rm pagina
 
-#roda pra proxima
-baixarFotos $url $user
+#chamar próxima caso não esteja vazia
+if [ -n "$url" ]; then
+ baixarFotos $url $user
+fi
+
 
 }
 
@@ -25,6 +32,8 @@ read user
 
 mkdir $user
 cd $user
+
+touch listaimagens
 
 url="http://www.fotolog.com/$user"
 
